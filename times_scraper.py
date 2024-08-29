@@ -1,6 +1,7 @@
 import requests
 import re
 from bs4 import BeautifulSoup as bs
+from tqdm import tqdm
 
 def get_json(topic, count = 30):
     url = "https://toifeeds.indiatimes.com/treact/feeds/toi/web/show/topic"
@@ -33,6 +34,8 @@ def get_articles(topic, count = 30):
     if data is None:
         return None
 
+    pbar = tqdm(total = count)
+
     articles = []
     for article in data['contentsData']['items']:
         title = article['hl']
@@ -45,7 +48,8 @@ def get_articles(topic, count = 30):
             'content': content_time[0],
             'time': content_time[1]
         })
+        pbar.update(1)
 
     return articles
 
-print(get_articles('cloudburst', 5))
+# print(len(get_articles('cloudburst')))
